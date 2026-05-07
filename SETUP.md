@@ -304,7 +304,47 @@ vercel --prod
 
 After editing env vars in the Vercel dashboard, redeploy. Vercel env var changes do not affect already-built deployments.
 
-## 10. CI Variables for Vercel Deploys
+## 10. GitHub-Backed Vercel Deployments
+
+This repository is intended to use Vercel Git integration:
+
+- GitHub repo: `https://github.com/Abby263/ai-trip-planner-agent`
+- Production branch: `main`
+- Frontend Vercel project root: `apps/web`
+- Backend Vercel project root: `apps/api`
+
+With Vercel Git integration connected, every pull request gets preview deployments, and every merge to `main` triggers production deployments for the linked Vercel projects.
+
+To verify or reconnect from the CLI:
+
+```bash
+cd apps/web
+vercel git connect https://github.com/Abby263/ai-trip-planner-agent.git --scope abhays-projects-d1037888
+
+cd ../api
+vercel git connect https://github.com/Abby263/ai-trip-planner-agent.git --scope abhays-projects-d1037888
+```
+
+Confirm the project roots:
+
+```bash
+cd apps/web
+vercel project inspect web --scope abhays-projects-d1037888
+
+cd ../api
+vercel project inspect api --scope abhays-projects-d1037888
+```
+
+Expected root directories:
+
+```text
+web: apps/web
+api: apps/api
+```
+
+Do not commit `.vercel/project.json`; it is intentionally ignored.
+
+## 11. CI Variables for Vercel Deploys
 
 Only needed if you deploy Vercel from GitHub Actions or another CI system instead of Vercel Git integration.
 
@@ -316,7 +356,7 @@ Only needed if you deploy Vercel from GitHub Actions or another CI system instea
 
 Store these as CI secrets. Never commit `.vercel/project.json` if it contains team/project details you do not want shared.
 
-## 11. Production Checklist
+## 12. Production Checklist
 
 - `apps/web` deployed on Vercel.
 - `apps/api` deployed on a backend host.
@@ -329,7 +369,7 @@ Store these as CI secrets. Never commit `.vercel/project.json` if it contains te
 - API health endpoint returns `{"status":"ok"}`.
 - Frontend planner can submit a trip request and render options, map, budget, sources, and booking links.
 
-## 12. Common Issues
+## 13. Common Issues
 
 ### Frontend cannot call API
 
@@ -369,7 +409,7 @@ Check:
 - Build command is `npm run build`.
 - Node version is current enough for Next.js 15.
 
-## 13. Current MVP Mode
+## 14. Current MVP Mode
 
 The app currently runs end-to-end with mock providers. For a safe public demo:
 

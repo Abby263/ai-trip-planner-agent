@@ -1,6 +1,8 @@
 .DS_Store
 .env
 .env.local
+.vercel/
+apps/*/.vercel/
 .venv
 venv
 __pycache__/
