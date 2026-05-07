@@ -20,7 +20,13 @@ import { motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
 
-const chips = ["Weekend in Lisbon", "Delhi food walk", "Paris photo spots", "Comedy tonight", "Japan with friends"];
+const chips: { label: string; query: string }[] = [
+  { label: "Weekend in Lisbon", query: "Plan a relaxed weekend in Lisbon with seafood, viewpoints, and live fado music." },
+  { label: "Delhi food walk", query: "Plan a 2-day Delhi vegetarian food walk with cultural stops and photography spots." },
+  { label: "Paris photo spots", query: "Plan a 4-day Paris trip focused on photography, scenic cafes, and sunset viewpoints." },
+  { label: "Comedy tonight", query: "Find comedy shows tonight near me with vegetarian dinner options nearby." },
+  { label: "Japan with friends", query: "Plan a 7-day Japan trip from Toronto for 4 friends. Mix of city, food, and nature." }
+];
 
 const highlights = [
   { icon: Plane, label: "Flights", value: "YYZ to DEL" },
@@ -64,9 +70,13 @@ export function Hero() {
             </div>
             <div className="mt-8 flex flex-wrap gap-2">
               {chips.map((chip) => (
-                <span key={chip} className="rounded-full border border-black/10 bg-white/32 px-4 py-2 text-sm font-medium shadow-sm backdrop-blur">
-                  {chip}
-                </span>
+                <Link
+                  key={chip.label}
+                  href={`/planner?q=${encodeURIComponent(chip.query)}`}
+                  className="rounded-full border border-black/10 bg-white/32 px-4 py-2 text-sm font-medium shadow-sm backdrop-blur transition-colors hover:bg-white/60"
+                >
+                  {chip.label}
+                </Link>
               ))}
             </div>
           </motion.div>
