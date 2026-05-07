@@ -12,6 +12,7 @@ interface PlannerState {
   setProgress: (progress: ProgressEvent[]) => void;
   appendProgress: (event: ProgressEvent) => void;
   selectedOption: () => ItineraryOption | null;
+  reset: () => void;
 }
 
 export const usePlannerStore = create<PlannerState>((set, get) => ({
@@ -31,5 +32,6 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
   selectedOption: () => {
     const { result, selectedOptionId } = get();
     return result?.options.find((option) => option.id === selectedOptionId) ?? result?.options[0] ?? null;
-  }
+  },
+  reset: () => set({ tripId: null, result: null, selectedOptionId: null, progress: [] })
 }));

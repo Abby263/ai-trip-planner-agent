@@ -1,7 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowUp, Bot, LocateFixed, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowUp, Bot, Loader2, MessageCircle, Sparkles } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,7 +16,7 @@ import { LocationPermissionButton } from "@/components/trip/LocationPermissionBu
 import type { PlanTripRequest } from "@/types/trip";
 
 const schema = z.object({
-  query: z.string().trim().min(4)
+  query: z.string().trim().min(4, "Tell me a little more about the trip.")
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -32,19 +33,27 @@ export function TripSearchForm({
   loading,
   followUpQuestions = []
 }: {
-  onSubmit: (payload: PlanTripRequest) => void;
+  onSubmit: (payload: PlanTripRequest, displayMessage: string) => void;
   loading?: boolean;
   followUpQuestions?: string[];
 }) {
+  const searchParams = useSearchParams();
+  const seededQuery = searchParams?.get("q") ?? null;
   const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [conversationContext, setConversationContext] = useState<string[]>([]);
   const [lastFollowUpKey, setLastFollowUpKey] = useState("");
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      query: "Plan a 3-day trip from Toronto to Delhi. I prefer vegetarian food, cultural places, photography spots, and a balanced pace."
+      query:
+        seededQuery ??
+        "Plan a 3-day trip from Toronto to Delhi. I prefer vegetarian food, cultural places, photography spots, and a balanced pace."
     }
   });
+
+  useEffect(() => {
+    if (seededQuery) form.setValue("query", seededQuery, { shouldValidate: true });
+  }, [seededQuery, form]);
 
   const followUpKey = useMemo(() => followUpQuestions.join("|"), [followUpQuestions]);
 
@@ -57,29 +66,45 @@ export function TripSearchForm({
 
   const submitMessage = (values: FormValues) => {
     const userMessage = values.query.trim();
+    if (!userMessage) return;
     const transcript = [...conversationContext, `User: ${userMessage}`];
     setConversationContext(transcript);
     form.setValue("query", "");
 
-    onSubmit({
-      query: transcript.length > 1 ? transcript.join("\n") : userMessage,
-      origin: null,
-      destination: null,
-      start_date: null,
-      end_date: null,
-      duration_days: null,
-      traveler_count: 1,
-      budget: null,
-      currency: "CAD",
-      preferences: [],
-      dietary_preferences: [],
-      travel_style: null,
-      current_location: currentLocation
-    });
+    onSubmit(
+      {
+        query: transcript.length > 1 ? transcript.join("\n") : userMessage,
+        origin: null,
+        destination: null,
+        start_date: null,
+        end_date: null,
+        duration_days: null,
+        traveler_count: 1,
+        budget: null,
+        currency: "CAD",
+        preferences: [],
+        dietary_preferences: [],
+        travel_style: null,
+        current_location: currentLocation
+      },
+      userMessage
+    );
   };
 
+  const queryValue = form.watch("query");
+  const errorMessage = form.formState.errors.query?.message;
+
   return (
-    <form className="space-y-4" onSubmit={form.handleSubmit(submitMessage)}>
+    <form
+      className="space-y-4"
+      onSubmit={form.handleSubmit(submitMessage)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+          event.preventDefault();
+          form.handleSubmit(submitMessage)();
+        }
+      }}
+    >
       <Card className="border-border bg-white/92 shadow-[0_18px_50px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-card/80">
         <CardHeader>
           <div className="flex items-center justify-between gap-3">
@@ -94,7 +119,9 @@ export function TripSearchForm({
                 <Bot className="h-4 w-4" />
               </span>
               <div className="min-w-0 space-y-1">
-                <p className="font-semibold text-foreground">{followUpQuestions.length ? "I need one more detail." : "Tell me what you want planned."}</p>
+                <p className="font-semibold text-foreground">
+                  {followUpQuestions.length ? "I need one more detail." : "Tell me what you want planned."}
+                </p>
                 {followUpQuestions.length ? (
                   <div className="space-y-1 text-muted-foreground">
                     {followUpQuestions.map((question) => (
@@ -102,7 +129,9 @@ export function TripSearchForm({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-muted-foreground">Share the trip, weekend, event search, budget, travelers, style, or constraints in one message.</p>
+                  <p className="text-muted-foreground">
+                    Share the trip, weekend, event search, budget, travelers, style, or constraints in one message.
+                  </p>
                 )}
               </div>
             </div>
@@ -113,9 +142,10 @@ export function TripSearchForm({
               <Textarea
                 id="query"
                 placeholder="Ask naturally, or answer the concierge's follow-up..."
-                className="min-h-36 resize-none border-0 bg-transparent p-0 text-base shadow-none focus-visible:ring-0"
+                className="min-h-32 resize-none border-0 bg-transparent p-0 text-base shadow-none focus-visible:ring-0"
                 {...form.register("query")}
               />
+              {errorMessage ? <p className="mt-1 text-xs text-destructive">{errorMessage}</p> : null}
               <div className="mt-3 flex flex-col gap-3 border-t border-border pt-3 dark:border-white/10">
                 <div className="flex flex-wrap gap-2">
                   {quickPrompts.map((prompt) => (
@@ -135,10 +165,16 @@ export function TripSearchForm({
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <MessageCircle className="h-4 w-4" />
-                    <span>Details come through chat</span>
+                    <span>{queryValue.length} chars · ⌘/Ctrl+Enter to send</span>
                   </div>
-                  <Button type="submit" size="icon" className="rounded-full bg-black text-white hover:bg-black/90" disabled={loading} aria-label="Send message">
-                    {loading ? <LocateFixed className="h-4 w-4 animate-pulse" /> : <ArrowUp className="h-4 w-4" />}
+                  <Button
+                    type="submit"
+                    size="icon"
+                    className="rounded-full bg-black text-white hover:bg-black/90"
+                    disabled={loading}
+                    aria-label="Send message"
+                  >
+                    {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowUp className="h-4 w-4" />}
                   </Button>
                 </div>
               </div>
