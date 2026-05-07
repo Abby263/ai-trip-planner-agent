@@ -329,17 +329,17 @@ Confirm the project roots:
 
 ```bash
 cd apps/web
-vercel project inspect web --scope abhays-projects-d1037888
+vercel project inspect ai-trip-planner-agent-frontend --scope abhays-projects-d1037888
 
 cd ../api
-vercel project inspect api --scope abhays-projects-d1037888
+vercel project inspect ai-trip-planner-agent-backend --scope abhays-projects-d1037888
 ```
 
 Expected root directories:
 
 ```text
-web: apps/web
-api: apps/api
+ai-trip-planner-agent-frontend: apps/web
+ai-trip-planner-agent-backend:  apps/api
 ```
 
 Do not commit `.vercel/project.json`; it is intentionally ignored.
