@@ -24,6 +24,7 @@ export function PlannerExperience() {
   const progress = usePlannerStore((state) => state.progress);
   const selectedOption = usePlannerStore((state) => state.selectedOption());
   const setProgress = usePlannerStore((state) => state.setProgress);
+  const followUpQuestions = mutation.data?.status === "needs_input" ? mutation.data.follow_up_questions : [];
   useTripStream(tripId);
 
   return (
@@ -34,13 +35,14 @@ export function PlannerExperience() {
             <MessageCircle className="h-5 w-5" />
             <p className="font-mono text-xs font-bold uppercase tracking-wide">Trip command</p>
           </div>
-          <h1 className="mt-4 text-2xl font-black leading-tight">Ask for a trip, weekend, event plan, or refinement.</h1>
+          <h1 className="mt-4 text-2xl font-black leading-tight">Chat with the agent. It will ask for missing details.</h1>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            The agent will parse constraints, call mock providers, route days, estimate cost, validate, and return booking-safe options.
+            No fixed trip form. The graph parses the conversation, calls providers, validates feasibility, and returns booking-safe options.
           </p>
         </div>
         <TripSearchForm
           loading={mutation.isPending}
+          followUpQuestions={followUpQuestions}
           onSubmit={(payload) => {
             setProgress([]);
             mutation.mutate(payload);
@@ -57,19 +59,20 @@ export function PlannerExperience() {
                   Agent workspace
                 </Badge>
                 {result ? <Badge variant="muted">{result.options.length} options generated</Badge> : null}
+                {followUpQuestions.length ? <Badge variant="outline">Needs your reply</Badge> : null}
               </div>
               <h2 className="mt-3 text-3xl font-black leading-tight">{result?.summary.title ?? "Trip planning workspace"}</h2>
               <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
                 {result
                   ? "Compare route-aware options with source freshness, estimates, validation notes, and external booking links."
-                  : "Generate the sample trip to see the complete provider-backed planning flow."}
+                  : "Start with a natural-language request. If dates, route, budget, travelers, or location are missing, the agent asks in chat."}
               </p>
             </div>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:w-[440px]">
               {[
                 { icon: Database, label: "Sources", value: result?.sources.length ?? 0 },
                 { icon: MapPinned, label: "Markers", value: result?.map_data.markers.length ?? 0 },
-                { icon: WalletCards, label: "Budget", value: selectedOption?.budget_summary ? "Ready" : "Pending" },
+                { icon: WalletCards, label: "Costs", value: selectedOption?.budget_summary ? "Ready" : "Pending" },
                 { icon: ShieldCheck, label: "Validation", value: result ? "Passed" : "Idle" }
               ].map((item) => (
                 <div key={item.label} className="rounded-lg border border-border bg-[#f7f3ea] p-3 dark:border-white/10 dark:bg-background/55">
@@ -97,7 +100,11 @@ export function PlannerExperience() {
           ) : (
             <EmptyState
               title="No itinerary generated"
-              description="Submit the Toronto to Delhi prompt to see mock flights, hotels, restaurants, events, route markers, budget, warnings, and sources."
+              description={
+                followUpQuestions.length
+                  ? "Reply to the concierge in the chat composer to continue planning."
+                  : "Send a trip request to see mock flights, hotels, restaurants, events, route markers, budget, warnings, and sources."
+              }
             />
           )}
         </AnimatePresence>
