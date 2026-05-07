@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.py"
+    }
+  ],
+  "env": {
+    "ENVIRONMENT": "production",
+    "MOCK_MODE": "true",
+    "CORS_ORIGINS": "https://web-nu-nine-20.vercel.app,http://localhost:3000,http://127.0.0.1:3000"
+  }
+}

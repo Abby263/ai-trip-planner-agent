@@ -1,0 +1,16 @@
+{
+  "name": "@trip-planner/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/types.ts",
+  "types": "src/types.ts",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "test": "echo \"No shared tests yet\""
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

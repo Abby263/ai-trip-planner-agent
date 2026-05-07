@@ -1,0 +1,17 @@
+.DS_Store
+.env
+.env.local
+.venv
+venv
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+node_modules/
+.next/
+dist/
+coverage/
+*.pyc
+*.log
+apps/api/alembic/versions/*.py
+!.gitkeep
