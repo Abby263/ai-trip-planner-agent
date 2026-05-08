@@ -2,6 +2,12 @@
 
 A production-oriented monorepo for a tool-first, source-backed AI travel concierge. The MVP runs locally with mock providers, while the backend architecture is ready for real flight, hotel, places, routing, events, weather, and currency APIs.
 
+## Live Deployment
+
+- Frontend: [https://ai-trip-concierge-agent.vercel.app](https://ai-trip-concierge-agent.vercel.app)
+- Backend API: [https://ai-trip-concierge-agent-api.vercel.app](https://ai-trip-concierge-agent-api.vercel.app)
+- API health check: [https://ai-trip-concierge-agent-api.vercel.app/api/health](https://ai-trip-concierge-agent-api.vercel.app/api/health)
+
 ## What This Builds
 
 - Next.js App Router frontend with a premium map-first planner UI.
@@ -92,8 +98,8 @@ cd apps/api && uv run pytest
 
 ## Deployment
 
-- Frontend: Vercel
-- Backend: Render, Railway, Fly.io, Azure Container Apps, Azure App Service, or AWS ECS
+- Frontend: Vercel project `web`, rooted at `apps/web`
+- Backend API: Vercel project `api`, rooted at `apps/api`, for the current mock MVP
 - Database: Supabase Postgres, Neon, Azure PostgreSQL, or RDS
 - Redis: Upstash Redis, Azure Cache for Redis, or managed Redis
 

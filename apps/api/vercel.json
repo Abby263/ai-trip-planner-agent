@@ -15,6 +15,6 @@
   "env": {
     "ENVIRONMENT": "production",
     "MOCK_MODE": "true",
-    "CORS_ORIGINS": "https://ai-trip-planner-agent-frontend.vercel.app,https://ai-trip-concierge-agent.vercel.app,https://web-nu-nine-20.vercel.app,http://localhost:3000,http://127.0.0.1:3000"
+    "CORS_ORIGINS": "https://ai-trip-concierge-agent.vercel.app,https://web-nu-nine-20.vercel.app,http://localhost:3000,http://127.0.0.1:3000"
   }
 }

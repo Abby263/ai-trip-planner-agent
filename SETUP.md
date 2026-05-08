@@ -7,6 +7,17 @@ This project is a monorepo with two deployable apps:
 
 The frontend must point `NEXT_PUBLIC_API_BASE_URL` to the public HTTPS URL of the deployed API.
 
+## Current Production Deployment
+
+- GitHub repo: `https://github.com/Abby263/ai-trip-planner-agent`
+- Frontend Vercel project: `web`
+- Backend Vercel project: `api`
+- Frontend URL: `https://ai-trip-concierge-agent.vercel.app`
+- Backend API URL: `https://ai-trip-concierge-agent-api.vercel.app`
+- API health check: `https://ai-trip-concierge-agent-api.vercel.app/api/health`
+
+The exact `ai-trip-planner.vercel.app` alias was unavailable on Vercel, so the active clean production domain is `ai-trip-concierge-agent.vercel.app`.
+
 ## 1. Local Setup
 
 ```bash
@@ -56,7 +67,7 @@ Set these in Vercel Project Settings → Environment Variables.
 
 | Variable | Required | Example | How to get it |
 | --- | --- | --- | --- |
-| `NEXT_PUBLIC_API_BASE_URL` | Yes | `https://your-api-host.example.com` | Deploy `apps/api` and use its public HTTPS URL. For local dev use `http://localhost:8000`. |
+| `NEXT_PUBLIC_API_BASE_URL` | Yes | `https://ai-trip-concierge-agent-api.vercel.app` | Deploy `apps/api` and use its public HTTPS URL. For local dev use `http://localhost:8000`. |
 | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | Optional | `AIza...` | Google Cloud Console → enable Maps JavaScript API → create browser API key → restrict by Vercel domain. |
 | `NEXT_PUBLIC_MAPBOX_TOKEN` | Optional | `pk...` | Mapbox account → Tokens → create public token. Only needed if you switch UI to Mapbox. |
 
@@ -74,7 +85,7 @@ Set these on the backend host, not in the Vercel frontend project.
 | `DATABASE_URL` | Required for production persistence | `postgresql://...` | Supabase, Neon, Azure PostgreSQL, or RDS. Use pooled connection if your provider recommends it. |
 | `REDIS_URL` | Required for cache/jobs | `redis://...` or `rediss://...` | Upstash Redis, Azure Cache for Redis, Railway Redis, or managed Redis. |
 | `MOCK_MODE` | Yes | `true` or `false` | Use `true` for local/demo mode. Use `false` when real provider keys are configured. |
-| `CORS_ORIGINS` | Yes | `https://your-app.vercel.app,https://yourdomain.com` | Add the Vercel production URL and any custom frontend domains. |
+| `CORS_ORIGINS` | Yes | `https://ai-trip-concierge-agent.vercel.app` | Add the Vercel production URL and any custom frontend domains. |
 | `LANGSMITH_API_KEY` | Optional | `lsv2_...` | LangSmith project settings. |
 | `LANGSMITH_PROJECT` | Optional | `ai-trip-planner-agent` | Any LangSmith project name you want traces grouped under. |
 | `LANGSMITH_TRACING` | Optional | `true` | Enable when LangSmith is configured. |
@@ -93,7 +104,7 @@ MOCK_MODE=true
 OPENAI_API_KEY=
 DATABASE_URL=<your postgres url>
 REDIS_URL=<your redis url>
-CORS_ORIGINS=https://your-vercel-app.vercel.app
+CORS_ORIGINS=https://ai-trip-concierge-agent.vercel.app
 ```
 
 The mock providers let the API return realistic trip data without paid travel API keys.
@@ -329,17 +340,17 @@ Confirm the project roots:
 
 ```bash
 cd apps/web
-vercel project inspect ai-trip-planner-agent-frontend --scope abhays-projects-d1037888
+vercel project inspect web --scope abhays-projects-d1037888
 
 cd ../api
-vercel project inspect ai-trip-planner-agent-backend --scope abhays-projects-d1037888
+vercel project inspect api --scope abhays-projects-d1037888
 ```
 
 Expected root directories:
 
 ```text
-ai-trip-planner-agent-frontend: apps/web
-ai-trip-planner-agent-backend:  apps/api
+web: apps/web
+api: apps/api
 ```
 
 Do not commit `.vercel/project.json`; it is intentionally ignored.
@@ -415,8 +426,8 @@ The app currently runs end-to-end with mock providers. For a safe public demo:
 
 ```text
 MOCK_MODE=true
-NEXT_PUBLIC_API_BASE_URL=https://your-backend.example.com
-CORS_ORIGINS=https://your-vercel-app.vercel.app
+NEXT_PUBLIC_API_BASE_URL=https://ai-trip-concierge-agent-api.vercel.app
+CORS_ORIGINS=https://ai-trip-concierge-agent.vercel.app
 ```
 
 Then add real provider keys one by one and test each provider before setting `MOCK_MODE=false`.

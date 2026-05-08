@@ -15,5 +15,6 @@ dist/
 coverage/
 *.pyc
 *.log
+*.tsbuildinfo
 apps/api/alembic/versions/*.py
 !.gitkeep
