@@ -98,8 +98,8 @@ cd apps/api && uv run pytest
 
 ## Deployment
 
-- Frontend: Vercel project `web`, rooted at `apps/web`
-- Backend API: Vercel project `api`, rooted at `apps/api`, for the current mock MVP
+- Frontend: Vercel project `ai-trip-planner-agent-frontend`, rooted at `apps/web`
+- Backend API: Vercel project `ai-trip-planner-agent-backend`, rooted at `apps/api`, for the current mock MVP
 - Database: Supabase Postgres, Neon, Azure PostgreSQL, or RDS
 - Redis: Upstash Redis, Azure Cache for Redis, or managed Redis
 

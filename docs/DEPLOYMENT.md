@@ -20,7 +20,7 @@ NEXT_PUBLIC_MAPBOX_TOKEN=
 
 ## Backend
 
-The current mock MVP deploys `apps/api` to Vercel as project `api`. For long-running production workloads, deploy `apps/api` to Render, Railway, Fly.io, Azure Container Apps, Azure App Service, AWS ECS, or another backend host with workers.
+The current mock MVP deploys `apps/api` to Vercel as project `ai-trip-planner-agent-backend`. For long-running production workloads, deploy `apps/api` to Render, Railway, Fly.io, Azure Container Apps, Azure App Service, AWS ECS, or another backend host with workers.
 
 Required environment variables:
 
