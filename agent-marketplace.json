@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "ai-travel-concierge",
+  "repository": "Abby263/ai-trip-planner-agent",
+  "catalog": "listed",
+  "availability": "sandbox",
+  "name": "Travel Planning Agent",
+  "category": "Planning",
+  "description": "Turn destinations and preferences into day-by-day itineraries.",
+  "request": "Travel dates or duration, destination, and preferences.",
+  "response": "Itinerary options, activities, and estimated costs.",
+  "integration": {
+    "operation": "Generate itinerary options using the trip planning API.",
+    "readiness": "The marketplace returns a saved mock-provider result. Enable custom inputs after validating provider mode and the downstream response schema."
+  },
+  "scenarios": [
+    {
+      "id": "delhi-itinerary",
+      "label": "Three-day Delhi itinerary"
+    }
+  ]
+}
